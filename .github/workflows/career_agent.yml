@@ -1,0 +1,46 @@
+name: Career Intelligence Agent
+
+on:
+  schedule:
+    # 04:00 UTC every Friday = 08:00 UAE time (GST = UTC+4)
+    - cron: '0 4 * * 5'
+    # 04:00 UTC every Monday = 08:00 UAE time (for LinkedIn draft on 1st Monday)
+    - cron: '0 4 * * 1'
+  workflow_dispatch:  # manual trigger from GitHub UI
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run career agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          EMAIL_ADDRESS:     ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_PASSWORD:    ${{ secrets.EMAIL_PASSWORD }}
+          TO_EMAIL:          ${{ secrets.TO_EMAIL }}
+        run: python career_agent.py
+
+      - name: Commit career log
+        run: |
+          git config user.name  "Career Intelligence Agent"
+          git config user.email "agent@career-agent"
+          git add career_log.csv
+          git diff --staged --quiet || git commit -m "career log · $(date +'%Y-%m-%d')"
+          git push
