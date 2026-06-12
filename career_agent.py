@@ -149,7 +149,8 @@ Produce a JSON response with this exact structure:
       "match_score": "High / Medium",
       "match_reasons": ["reason 1", "reason 2"],
       "location": "Dubai / Remote / Hybrid",
-      "source": "LinkedIn / Bayt / Company site"
+      "source": "LinkedIn / Bayt / Company site",
+      "url": "direct URL to the job listing — must be a real, working URL from your search results"
     }}
   ],
   "skill_trends": {{
@@ -244,12 +245,17 @@ def build_email_html(data: dict, include_linkedin: bool) -> str:
         score_color = "#16a34a" if score == "High" else "#ca8a04"
         score_bg    = "#dcfce7" if score == "High" else "#fef9c3"
         reasons     = " · ".join(role.get("match_reasons", []))
+        url         = role.get("url", "")
+        title_html  = (
+            f'<a href="{url}" target="_blank" style="font-weight:700;color:#4f46e5;'
+            f'font-size:14px;text-decoration:none;">{role.get("title", "")} ↗</a>'
+            if url else
+            f'<span style="font-weight:700;color:#111827;font-size:14px;">{role.get("title", "")}</span>'
+        )
         role_rows += f"""
         <tr>
           <td style="padding:12px;border-bottom:1px solid #f3f4f6;">
-            <div style="font-weight:700;color:#111827;font-size:14px;">
-              {role.get('title', '')}
-            </div>
+            <div>{title_html}</div>
             <div style="color:#6b7280;font-size:12px;margin-top:2px;">
               {role.get('company', '')} · {role.get('location', '')}
             </div>
