@@ -8,7 +8,6 @@
 - 👔 Roles matching your profile (Principal Engineer / Tech Lead in Dubai fintech)
 - 📈 Skill trends — rising, stable, fading in senior engineering JDs
 - 💰 Salary benchmarks — current market rates for your level in Dubai
-- 🔍 Companies to watch — who's hiring, expanding, or funded
 - 🧠 Weekly insight — one actionable career observation
 
 **First Monday of each month — adds:**
@@ -91,8 +90,6 @@ PROFILE = {
     "current_title":   "Tech Lead AVP",
     "skills":          ["Java", "Spring Boot", "Kafka", ...],
     "target_roles":    ["Principal Engineer", ...],
-    "min_salary_aed":  38000,
-    "companies_to_watch": ["Wio Bank", "Tabby", ...]
 }
 ```
 
