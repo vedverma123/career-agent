@@ -176,7 +176,7 @@ If include_monthly is false, set monthly to null.
 Respond ONLY with valid JSON, no preamble or markdown backticks."""
 
     response = client.messages.create(
-        model="claude-opus-4-5",
+        model="claude-haiku-4-5-20251001",
         max_tokens=4000,
         tools=[{"type": "web_search_20250305", "name": "web_search"}],
         messages=[{"role": "user", "content": prompt}]
