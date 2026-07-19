@@ -241,43 +241,37 @@ def build_email_html(data: dict, include_monthly: bool) -> str:
         "Low":    ("#9ca3af", "#f3f4f6"),
     }
 
-    # ── Market signals rows
-    signal_rows = ""
+    # ── Market signals — mobile card layout
+    signal_cards = ""
     for s in signals[:6]:
-        stype      = s.get("signal_type", "")
-        sc, sb     = signal_colors.get(stype, ("#6b7280", "#f3f4f6"))
-        rel        = s.get("career_relevance", "Medium")
-        rc, rb     = relevance_colors.get(rel, ("#9ca3af", "#f3f4f6"))
-        signal_rows += f"""
-        <tr>
-          <td style="padding:14px 12px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
-            <div style="font-weight:700;color:#111827;font-size:13px;margin-bottom:4px;">
-              {s.get('company', '')}
+        stype  = s.get("signal_type", "")
+        sc, sb = signal_colors.get(stype, ("#6b7280", "#f3f4f6"))
+        rel    = s.get("career_relevance", "Medium")
+        rc, rb = relevance_colors.get(rel, ("#9ca3af", "#f3f4f6"))
+        signal_cards += f"""
+        <div style="padding:14px 0;border-bottom:1px solid #f3f4f6;">
+          <div style="display:flex;justify-content:space-between;align-items:center;
+                      margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+            <div>
+              <span style="font-weight:700;color:#111827;font-size:14px;">
+                {s.get('company', '')}</span>
+              &nbsp;
+              <span style="background:{sb};color:{sc};padding:2px 8px;border-radius:4px;
+                           font-size:10px;font-weight:700;text-transform:uppercase;">
+                {stype}</span>
             </div>
-            <span style="background:{sb};color:{sc};padding:2px 8px;border-radius:4px;
-                         font-size:10px;font-weight:700;text-transform:uppercase;">{stype}</span>
-          </td>
-          <td style="padding:14px 12px;border-bottom:1px solid #f3f4f6;vertical-align:top;">
-            <div style="color:#111827;font-size:13px;margin-bottom:4px;">
-              {s.get('headline', '')}
-            </div>
-            <div style="color:#6b7280;font-size:12px;">
-              {s.get('why_it_matters', '')}
-            </div>
-            <div style="color:#9ca3af;font-size:11px;margin-top:4px;">
-              via {s.get('source', '')}
-            </div>
-          </td>
-          <td style="padding:14px 12px;border-bottom:1px solid #f3f4f6;
-                     text-align:center;vertical-align:top;white-space:nowrap;">
-            <span style="background:{rb};color:{rc};padding:2px 8px;border-radius:4px;
-                         font-size:11px;font-weight:700;">{rel}</span>
-          </td>
-        </tr>"""
+            <span style="background:{rb};color:{rc};padding:2px 10px;border-radius:4px;
+                         font-size:11px;font-weight:700;white-space:nowrap;">{rel} relevance</span>
+          </div>
+          <div style="color:#111827;font-size:13px;font-weight:600;margin-bottom:4px;
+                      line-height:1.4;">{s.get('headline', '')}</div>
+          <div style="color:#6b7280;font-size:12px;line-height:1.5;margin-bottom:4px;">
+            {s.get('why_it_matters', '')}</div>
+          <div style="color:#9ca3af;font-size:11px;">via {s.get('source', '')}</div>
+        </div>"""
 
-    if not signal_rows:
-        signal_rows = """<tr><td colspan="3" style="padding:16px;text-align:center;
-                         color:#9ca3af;font-size:13px;">No significant signals found this week.</td></tr>"""
+    if not signal_cards:
+        signal_cards = '<p style="color:#9ca3af;font-size:13px;text-align:center;padding:16px 0;">No significant signals found this week.</p>' 
 
     # ── Skill tags
     def skill_tags(skills, color, bg):
@@ -342,20 +336,8 @@ def build_email_html(data: dict, include_monthly: bool) -> str:
     <!-- Market Signals -->
     <div style="padding:24px 32px;border-bottom:1px solid #e5e7eb;">
       <div style="font-size:13px;font-weight:700;color:#6b7280;letter-spacing:0.5px;
-                  text-transform:uppercase;margin-bottom:12px;">🏢 Market Signals This Week</div>
-      <table style="width:100%;border-collapse:collapse;">
-        <thead>
-          <tr style="background:#f9fafb;">
-            <th style="padding:8px 12px;text-align:left;font-size:11px;color:#6b7280;
-                       font-weight:600;text-transform:uppercase;width:160px;">Company</th>
-            <th style="padding:8px 12px;text-align:left;font-size:11px;color:#6b7280;
-                       font-weight:600;text-transform:uppercase;">What Happened & Why It Matters</th>
-            <th style="padding:8px 12px;text-align:center;font-size:11px;color:#6b7280;
-                       font-weight:600;text-transform:uppercase;width:80px;">Relevance</th>
-          </tr>
-        </thead>
-        <tbody>{signal_rows}</tbody>
-      </table>
+                  text-transform:uppercase;margin-bottom:4px;">🏢 Market Signals This Week</div>
+      {signal_cards}
     </div>
 
     <!-- Skill Trends -->
@@ -387,7 +369,7 @@ def build_email_html(data: dict, include_monthly: bool) -> str:
     <div style="padding:24px 32px;border-bottom:1px solid #e5e7eb;">
       <div style="font-size:13px;font-weight:700;color:#6b7280;letter-spacing:0.5px;
                   text-transform:uppercase;margin-bottom:14px;">💰 Salary Benchmark · Dubai</div>
-      <table style="width:100%;border-collapse:collapse;">
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
         <tr style="background:#f9fafb;">
           <td style="padding:10px 14px;font-size:13px;color:#374151;font-weight:600;
                      border-bottom:1px solid #f3f4f6;">Principal Engineer</td>
